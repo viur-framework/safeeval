@@ -1,10 +1,9 @@
 import ast
-from typing import Dict, Any, Callable
+from typing import Any, Callable, Dict
 
 
 class SafeEval:
-	"""
-		Safely evaluate an expression from an untrusted party
+	"""Safely evaluate an expression from an untrusted party
 	"""
 
 	@staticmethod
@@ -32,7 +31,7 @@ class SafeEval:
 			[SafeEval.evalAst(x, names) for x in node.values]),
 		ast.UnaryOp: lambda node, names: SafeEval.unaryOpMap[type(node.op)](SafeEval.evalAst(node.operand, names)),
 		ast.BinOp: lambda node, names: SafeEval.dualOpMap[type(node.op)](SafeEval.evalAst(node.left, names),
-																		 SafeEval.evalAst(node.right, names)),
+		                                                                 SafeEval.evalAst(node.right, names)),
 		ast.IfExp: lambda node, names: SafeEval.evalAst(node.body, names) if SafeEval.evalAst(node.test, names) else \
 			SafeEval.evalAst(node.orelse, names),
 	}
