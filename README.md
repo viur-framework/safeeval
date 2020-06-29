@@ -29,7 +29,7 @@ Write issues and provide patches via PRs on github.
 
 * **Tobias Steinrücken ** - *Initial work* - [Mausbrand INformationsysteme GmbH](https://github.com/viur-framework/safeeval)
 
-See also the list of [contributors](https://github.com/viur-framework/safeeval/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/viur-framework/safeeval/blob/master/contributors) who participated in this project.
 
 ## License
 
