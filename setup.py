@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
 	name="safeeval",  # Replace with your own username
-	version="0.0.2",
+	version="0.0.3",
 	author="Mausbrand Informationssysteme GmbH",
 	author_email="team@viur.dev",
 	description="Safely evaluates simple python expressions",
