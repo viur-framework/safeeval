@@ -8,7 +8,7 @@ import safeeval
 
 class SafeEvalTests(unittest.TestCase):
 	def setUp(self) -> None:
-		self.interpreter = safeeval.SafeEval()
+		self.interpreter = safeeval.SafeEval({"str": str, "int": int, "lstrip": str.rstrip})
 
 	def tearDown(self):
 		del self.interpreter
@@ -65,4 +65,21 @@ class SafeEvalTests(unittest.TestCase):
 			),
 			1299.6,
 			"ArithmeticExpression does not work"
+		)
+
+	def test_stringCall(self):
+		ast = self.interpreter.compile('str(23)')
+		self.assertEqual(
+			self.interpreter.execute(
+				ast,
+				{}
+			),
+			"23",
+			"str() call failed"
+		)
+
+		self.assertRaises(
+			Exception,
+			self.interpreter.compile('int("23")'),
+			"int should not be valid / in call whitelist"
 		)

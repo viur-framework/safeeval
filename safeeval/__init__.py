@@ -6,8 +6,11 @@ class SafeEval:
 	"""Safely evaluate an expression from an untrusted party
 	"""
 
-	def __init__(self):
+	def __init__(self, buildinCallWhitelist=[]):
+		self.whitelist = buildinCallWhitelist
+
 		self.nodes: Dict[ast.AST, Callable[[ast.AST, Dict[str, Any]], Any]] = {
+			ast.Call: self.visitCallNode,
 			ast.Compare: self.compareNode,
 			ast.Name: lambda node, names: names[node.id],
 			ast.Num: lambda node, _: node.n,
@@ -42,6 +45,12 @@ class SafeEval:
 			ast.Mult: lambda x, y: x * y,
 			ast.Div: lambda x, y: x / y,
 		}
+
+	def visitCallNode(self, node: ast.Call, names: Dict[str, Any]):
+		args = [self.execute(arg, names) for arg in node.args]
+		if node.func.id not in self.whitelist:
+			raise Exception("function not in whitelist - aborting")
+		return self.whitelist[node.func.id](*args)
 
 	def compareNode(self, node: ast.Compare, names: Dict[str, Any]) -> bool:
 		"""
