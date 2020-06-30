@@ -80,6 +80,6 @@ class SafeEvalTests(unittest.TestCase):
 
 		self.assertRaises(
 			Exception,
-			self.interpreter.compile('int("23")'),
+			self.interpreter.compile('foo("23")'),
 			"int should not be valid / in call whitelist"
 		)
