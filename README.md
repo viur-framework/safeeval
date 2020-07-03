@@ -20,6 +20,9 @@ Simple Comparision:
     ast = safeeval.SafeEval.parse("x == y")
     res = safeeval.SafeEval.evalAst(ast, {"x": 4, "y": 3)
     print("res", res)
+    
+    
+More examples can be found in tests directory.
 
 ## Contributing
 
