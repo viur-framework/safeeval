@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 __author__ = "Stefan Kögl <sk@mausbrand.de>"
 
+import sys
+import logging
 import unittest
+from unittest import TestCase
 
 import safeeval
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
-class SafeEvalTests(unittest.TestCase):
+
+class SafeEvalTests(TestCase):
 	def setUp(self) -> None:
 		self.interpreter = safeeval.SafeEval({"str": str, "int": int, "lstrip": str.rstrip})
 
@@ -78,8 +83,11 @@ class SafeEvalTests(unittest.TestCase):
 			"str() call failed"
 		)
 
-		self.assertRaises(
-			Exception,
-			self.interpreter.compile('foo("23")'),
-			"int should not be valid / in call whitelist"
-		)
+	def test_notAllowedCallable(self):
+		with self.assertRaises(NameError) as err:
+			ast = self.interpreter.compile('foo("23")')
+			self.interpreter.execute(ast, {})
+
+
+if __name__ == '__main__':
+	unittest.main(verbosity=4)
