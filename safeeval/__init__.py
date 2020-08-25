@@ -8,6 +8,7 @@ A plain instance of SafeEval without allowedCallables argument will not accept a
 """
 
 import ast
+
 from typing import Any, Callable, Dict
 
 import typing
@@ -32,8 +33,10 @@ class SafeEval:
 			ast.Call: self.callNode,
 			ast.Compare: self.compareNode,
 			ast.Name: lambda node, names: names[node.id],
+			ast.Constant: lambda node, _: node.n,
 			ast.Num: lambda node, _: node.n,
 			ast.Str: lambda node, _: node.s,
+			ast.JoinedStr: lambda node, names: [self.execute(x, names) for x in node.values],
 			ast.Subscript: lambda node, names: self.execute(node.value, names)[
 				self.execute(node.slice, names)],
 			ast.Index: lambda node, names: self.execute(node.value, names),
@@ -56,6 +59,7 @@ class SafeEval:
 
 		self.dualOpMap: Dict[ast.AST, Callable[[Any, Any], Any]] = {
 			ast.Eq: lambda x, y: x == y,
+			ast.NotEq: lambda x, y: x != y,
 			ast.Gt: lambda x, y: x > y,
 			ast.GtE: lambda x, y: x >= y,
 			ast.Lt: lambda x, y: x < y,
@@ -107,6 +111,7 @@ class SafeEval:
 		:param names: a mapping of local objects which is used as 'locals' namespace
 		:return: whatever the expression wants to return
 		"""
+		print("execute", list(self.nodes.keys()), node, names)
 		return self.nodes[type(node)](node, names)
 
 	def compile(self, expr: str) -> ast.AST:

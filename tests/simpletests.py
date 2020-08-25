@@ -88,6 +88,18 @@ class SafeEvalTests(TestCase):
 			ast = self.interpreter.compile('foo("23")')
 			self.interpreter.execute(ast, {})
 
+	def test_FmtSelectionMultiple(self):
+		testData = {
+			"event_header_asset": [
+				{'dest': {'asset_type': 'field'}},
+				{'dest': {'asset_type': 'field'}},
+				{'dest': {'asset_type': 'machine'}}
+			]
+		}
+		expression = "'${event_header_asset.dest.name): $(event_header_asset.dest.lat), $(event_header_asset.dest.lng)' if event_header_asset['dest']['asset_type'] != 'field' else '$(event_header_asset.dest.name): $(event_header_asset.dest.field_coords)'"
+		ast = self.interpreter.compile('str(23)')
+		self.interpreter.execute(ast, testData)
+
 
 if __name__ == '__main__':
 	unittest.main(verbosity=4)
